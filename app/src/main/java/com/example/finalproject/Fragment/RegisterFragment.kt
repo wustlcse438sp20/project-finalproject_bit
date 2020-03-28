@@ -26,6 +26,8 @@ import android.graphics.Bitmap
 
 
 import android.content.ContentResolver
+import com.example.finalproject.Data.User
+import com.google.firebase.storage.FirebaseStorage
 
 
 class RegisterFragment : Fragment() {
@@ -50,9 +52,6 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
         Upload_Photo = Upload_photo
         Register = Register_button
         Register.setOnClickListener {
@@ -71,7 +70,7 @@ class RegisterFragment : Fragment() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         Log.d(ContentValues.TAG, "Register successful")
-                        upLoadInformation()
+                        upLoadPhotoToFirebaseStorage()
                         Toast.makeText(
                             context,
                             "Register successful, Please Login",
@@ -106,30 +105,38 @@ class RegisterFragment : Fragment() {
 
             selectedPhotoUri = data.data
 
-//
-//            val bitmap = MediaStore.Images.Media.getBitmap(ContentResolver, selectedPhotoUri)
 
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, selectedPhotoUri)
 
-//            val source = ImageDecoder.createSource(contentResolver, selectedPhotoUri)
-//
-//            selectphoto_imageview_register.setImageBitmap(bitmap)
+            selectphoto_imageview_register.setImageBitmap(bitmap)
 
             Upload_Photo.alpha = 0f
 
-
-
-//      val bitmapDrawable = BitmapDrawable(bitmap)
-//      selectphoto_button_register.setBackgroundDrawable(bitmapDrawable)
         }
     }
+    private fun upLoadPhotoToFirebaseStorage(){
+        if(selectedPhotoUri == null) return
+        val fileName = FirebaseAuth.getInstance().uid
+        val ref = FirebaseStorage.getInstance().getReference("/image/$fileName")
+        ref.putFile(selectedPhotoUri!!)
+            .addOnSuccessListener {
+                Log.d("Register", "Upload image successful")
+                ref.downloadUrl.addOnSuccessListener {
+                    Log.d("Register","image location "+it)
+                    upLoadInformation(it.toString())
+                }
+            }
+    }
 
-    private fun upLoadInformation(){
+    private fun upLoadInformation(profileImageUri:String){
 
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("/users/$uid")
-//        val user = GameActivity.User(uid, UserName.text.toString(), 500,0,0)
-//        myRef.setValue(user)
+        val user = User(uid, UserName.text.toString(), profileImageUri)
+        myRef.setValue(user).addOnSuccessListener {
+            Log.d("Register", "Upload information to database successful")
+        }
 
     }
 

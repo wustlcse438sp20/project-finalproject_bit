@@ -24,10 +24,24 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
+            android:id="@+id/UserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="User Name"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toTopOf="@+id/Register_Email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.995" />
+
+        <EditText
             android:id="@+id/Register_Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="256dp"
+            android:layout_marginBottom="148dp"
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
@@ -51,19 +65,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Register_Password" />
 
-        <EditText
-            android:id="@+id/UserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="User Name"
-            android:inputType="textPersonName"
-            android:text=""
-            app:layout_constraintBottom_toTopOf="@+id/Register_Email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/selectphoto_imageview_register"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toBottomOf="@+id/Upload_photo"
+            app:layout_constraintEnd_toEndOf="@+id/Upload_photo"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Upload_photo"
+            app:layout_constraintTop_toTopOf="@+id/Upload_photo"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/Upload_photo"
@@ -83,16 +94,7 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.496" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/selectphoto_imageview_register"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:layout_constraintBottom_toBottomOf="@+id/Upload_photo"
-            app:layout_constraintEnd_toEndOf="@+id/Upload_photo"
-            app:layout_constraintStart_toStartOf="@+id/Upload_photo"
-            app:layout_constraintTop_toTopOf="@+id/Upload_photo" />
+            app:layout_constraintVertical_bias="0.852" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
