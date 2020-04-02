@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import com.example.finalproject.BlogActivity
 
 import com.example.finalproject.R
 import com.example.finalproject.ResetPasswordActivity
@@ -57,9 +58,8 @@ class LoginFragment : Fragment() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         Log.d(ContentValues.TAG, "login successful")
-//                        val intent =
-//                            Intent(this@LoginFragment.context, GameActivity::class.java)
-//                        startActivity(intent)
+                        val intent = Intent(this@LoginFragment.context,BlogActivity::class.java)
+                        startActivity(intent)
 
                     } else {
 
