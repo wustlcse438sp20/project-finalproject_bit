@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.FriendsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+
+        <LinearLayout
+            android:id="@+id/friend_search"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/friend_addBySearch">
+
+            <EditText
+                android:id="@+id/friend_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0.7"
+                android:hint="Search friend by ID" />
+
+            <Button
+                android:id="@+id/friend_search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="0.1"
+                android:text="Search" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/friend_addBySearch"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/friend_search"
+            app:layout_constraintBottom_toTopOf="@id/friendsList_recyclerview">
+
+            <EditText
+                android:id="@+id/friend_addBySearch_input"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0.7"
+                android:hint="Add friend by ID" />
+
+            <Button
+                android:id="@+id/friend_addBySearch_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="0.1"
+                android:text="Add" />
+
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friendsList_recyclerview"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/friend_addBySearch"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

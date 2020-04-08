@@ -12,6 +12,8 @@
         <activity android:name=".AddBlogActivity"></activity>
         <activity android:name=".BlogActivity" />
         <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".MainScreenActivity"></activity>
+        <activity android:name=".PrivatelyChatActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

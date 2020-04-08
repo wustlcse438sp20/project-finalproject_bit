@@ -26,7 +26,9 @@ import android.graphics.Bitmap
 
 
 import android.content.ContentResolver
+import com.example.finalproject.Data.Friends
 import com.example.finalproject.Data.User
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -38,9 +40,6 @@ class RegisterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
     }
 
     override fun onCreateView(
@@ -133,11 +132,20 @@ class RegisterFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("/users/$uid")
-        val user = User(uid, UserName.text.toString(), profileImageUri)
+        val user = User(uid!!, UserName.text.toString(), profileImageUri)
         myRef.setValue(user).addOnSuccessListener {
             Log.d("Register", "Upload information to database successful")
         }
 
+        initialFriendsDatabase()
+    }
+
+    private fun initialFriendsDatabase(){
+        var uid : String? = FirebaseAuth.getInstance().uid
+        var database : FirebaseDatabase = FirebaseDatabase.getInstance()
+        var myRef : DatabaseReference = database.getReference("/friends/$uid")
+        var friends = Friends(uid!!, ArrayList())
+        myRef.setValue(friends)
     }
 
 

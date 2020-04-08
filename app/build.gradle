@@ -4,14 +4,17 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+androidExtensions {
+    experimental = true
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.example.finalproject"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,12 +42,19 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
-    implementation "com.xwray:groupie:2.7.0"
+    implementation 'com.google.firebase:firebase-database-ktx:19.2.1'
+
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    //desgin for bottomNavigation
+    implementation 'com.android.support:design:29.1.0'
 
+    // groupie recycleview
+    implementation "com.xwray:groupie:2.1.0"
 
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 }
 apply plugin: 'com.google.gms.google-services'
