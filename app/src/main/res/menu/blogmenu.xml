@@ -5,15 +5,15 @@
 
     <item
         android:id="@+id/blog_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/baseline_search_black_18dp"
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
-    <item android:id="@+id/blog_add"
-        android:icon="@drawable/baseline_add_black_18dp"
-        android:title ="@string/add"
-        app:showAsAction="always"
-        />
+    <item
+        android:id="@+id/blog_add"
+        android:icon="@drawable/baseline_add_white_18dp"
+        android:title="@string/add"
+        app:showAsAction="always" />
 
 </menu>
 

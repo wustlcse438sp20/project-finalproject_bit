@@ -17,5 +17,6 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(RegisterFragment(), "Register")
         viewPager?.adapter = adapter
         tabs.setupWithViewPager(viewPager)
+        supportActionBar?.title = "Login&Register"
     }
 }
