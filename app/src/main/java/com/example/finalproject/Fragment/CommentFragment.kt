@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.ViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.bloglayout.view.*
 import kotlinx.android.synthetic.main.commentlayout.view.*
@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_comment.*
 
 class CommentFragment : Fragment() {
 
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,9 +70,9 @@ class CommentFragment : Fragment() {
 
         })
     }
-    class CommentItem(val blog: Comment) : Item<GroupieViewHolder>() {
+    class CommentItem(val blog: Comment) : Item<ViewHolder>() {
 
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        override fun bind(viewHolder: ViewHolder, position: Int) {
 
             val uid = blog.uid
 

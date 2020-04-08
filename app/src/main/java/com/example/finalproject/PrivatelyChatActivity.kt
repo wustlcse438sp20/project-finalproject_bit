@@ -85,7 +85,7 @@ class PrivatelyChatActivity : AppCompatActivity() {
 
         val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
 
-        val chatMessage = ChatMessage(reference.key!!, text, fromId!!, toId, System.currentTimeMillis() / 1000)
+        val chatMessage = ChatMessage(reference.key!!, text, fromId!!, toId!!, System.currentTimeMillis() / 1000)
 
         reference.setValue(chatMessage)
             .addOnSuccessListener {

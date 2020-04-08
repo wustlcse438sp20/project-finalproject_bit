@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.ViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_blog.*
 import kotlinx.android.synthetic.main.bloglayout.*
@@ -43,7 +43,7 @@ import java.util.*
 
 
 class BlogActivity : AppCompatActivity() {
-     val adapter = GroupAdapter<GroupieViewHolder>()
+     val adapter = GroupAdapter<ViewHolder>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blog)
@@ -131,9 +131,9 @@ class BlogActivity : AppCompatActivity() {
     }
 
 
-    class BlogItem(val Context : Context, val blog: BlogContent) : Item<GroupieViewHolder>() {
+    class BlogItem(val Context : Context, val blog: BlogContent) : Item<ViewHolder>() {
 
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        override fun bind(viewHolder: ViewHolder, position: Int) {
             val commentFragment = CommentFragment()
             val blogId = blog.blogId
             val uid = blog.uid
@@ -195,7 +195,7 @@ class BlogActivity : AppCompatActivity() {
             return R.layout.bloglayout
         }
         private fun refresh(){
-            val adapter = GroupAdapter<GroupieViewHolder>()
+            val adapter = GroupAdapter<ViewHolder>()
             adapter.notifyDataSetChanged()
         }
 
