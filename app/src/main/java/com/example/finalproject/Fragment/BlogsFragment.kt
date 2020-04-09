@@ -15,6 +15,7 @@ import com.example.finalproject.AddBlogActivity
 import com.example.finalproject.Data.BlogContent
 import com.example.finalproject.Data.Comment
 import com.example.finalproject.Data.User
+import com.example.finalproject.MainScreenActivity
 import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -32,6 +33,9 @@ class BlogsFragment : Fragment() {
     val adapter = GroupAdapter<GroupieViewHolder>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        (activity as MainScreenActivity).supportActionBar?.title = "Blog"
+
     }
 
     override fun onCreateView(
@@ -47,6 +51,54 @@ class BlogsFragment : Fragment() {
         fetchBlog()
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.blogmenu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+//        val manager = getSystemService(Context.SEARCH_SERVICE)as SearchManager
+//        val searchItem = menu?.findItem(R.id.blog_search)
+//        val searchView = searchItem?.actionView as SearchView
+//
+//        searchView.setOnQueryTextListener((object : SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//               searchView.clearFocus()
+//               searchView.setQuery("",false)
+//                searchItem.collapseActionView()
+//
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//
+//        }))
+//
+//        return true
+//
+//    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.blog_add -> {
+                addNewBlog()
+                true
+            }
+//            R.id.blog_search -> {
+//                searchBlog()
+//                true
+//            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+
     private fun addNewBlog() {
         val intent = Intent(this@BlogsFragment.context, AddBlogActivity::class.java)
         startActivity(intent)
@@ -126,7 +178,7 @@ class BlogsFragment : Fragment() {
                 refresh()
 
             }
-            viewHolder.itemView.comment_button.setOnClickListener({
+            viewHolder.itemView.comment_button.setOnClickListener{
                 val comment = viewHolder.itemView.comment.text.toString()
                 val commentUid = FirebaseAuth.getInstance().uid
                 val ref = FirebaseDatabase.getInstance().getReference("/comment/$blogId/$commentUid")
@@ -136,7 +188,11 @@ class BlogsFragment : Fragment() {
                 }
                 viewHolder.itemView.comment.text.clear()
                 refresh()
-            })
+            }
+
+            viewHolder.itemView.addFriend_button.setOnClickListener{
+                // Add friends funciton
+            }
 
         }
 
