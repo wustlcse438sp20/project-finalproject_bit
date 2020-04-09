@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import com.example.finalproject.BlogActivity
 import com.example.finalproject.MainScreenActivity
 
 import com.example.finalproject.R

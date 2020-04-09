@@ -143,8 +143,8 @@ class AddBlogActivity : AppCompatActivity() {
         ref.setValue(blogInformation)
             .addOnSuccessListener {
                 Log.d("AddBlog","Success")
-                val itent = Intent(this,BlogActivity::class.java)
-                startActivity(itent)
+//                val itent = Intent(this,BlogActivity::class.java)
+//                startActivity(itent)
             }
             .addOnFailureListener {
                 Log.d("AddBlog", "Failed to set value to database: ${it.message}")

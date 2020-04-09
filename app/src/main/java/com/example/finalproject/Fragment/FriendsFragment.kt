@@ -22,10 +22,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+
+
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
+
 import kotlinx.android.synthetic.main.fragment_friends.*
 import kotlinx.android.synthetic.main.friends_list_row.view.*
 
@@ -151,7 +154,7 @@ class FriendsFragment : Fragment() {
         uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(p0: DataSnapshot) {
-                var adapter = GroupAdapter<ViewHolder>()
+                var adapter = GroupAdapter<GroupieViewHolder>()
                 val friends = p0.getValue(Friends::class.java)
                 val friends_Uids = friends!!.friends_uid_list
                 Log.d("friends uids", friends_Uids.toString())
@@ -209,8 +212,8 @@ class FriendsFragment : Fragment() {
     }
 
 
-    inner class FriendItem(var activity: FragmentActivity?, var view: View, val user: User?) : Item<ViewHolder>() {
-        override fun bind(viewHolder: ViewHolder, position: Int) {
+    inner class FriendItem(var activity: FragmentActivity?, var view: View, val user: User?) : Item<GroupieViewHolder>() {
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.friends_item_name.text = user!!.userName
             Log.d("usrname displayed", user.userName)
 

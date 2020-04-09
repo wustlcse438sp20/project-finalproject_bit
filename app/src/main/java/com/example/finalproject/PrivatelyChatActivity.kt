@@ -15,15 +15,16 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
+
 import kotlinx.android.synthetic.main.activity_privatelychat.*
 import kotlinx.android.synthetic.main.message_from_row.view.*
 import kotlinx.android.synthetic.main.message_to_row.view.*
 
 class PrivatelyChatActivity : AppCompatActivity() {
 
-    val adapter = GroupAdapter<ViewHolder>()
+    val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,8 +96,8 @@ class PrivatelyChatActivity : AppCompatActivity() {
 }
 
 
-class ChatFromItem(val text : String, val user : User) : Item<ViewHolder>() {
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatFromItem(val text : String, val user : User) : Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.message_from_text.text = text
 
         var url = user.profileImage
@@ -109,8 +110,8 @@ class ChatFromItem(val text : String, val user : User) : Item<ViewHolder>() {
     }
 }
 
-class ChatToItem(val text : String, val user : User) : Item<ViewHolder>() {
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+class ChatToItem(val text : String, val user : User) : Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.message_to_text.text = text
 
         var url = user.profileImage
