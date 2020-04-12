@@ -23,7 +23,6 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -105,6 +104,20 @@ class FriendsFragment : Fragment() {
                     })
                 }
             }
+        }
+    }
+
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if(hidden) {
+
+        }
+        else {
+            fetchCurrentUser()
+            fetchUsers()
+            fetchFriends(view!!)
         }
     }
 
@@ -236,6 +249,7 @@ class FriendsFragment : Fragment() {
                         friendsUid_List.remove(chosenUserId)
                         database.child("friends").child(uid.toString()).child("friends_uid_list")
                             .setValue(friendsUid_List)
+
                         FriendsFragment().fetchFriends(view)
 
                     }

@@ -11,29 +11,35 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.finalproject.AddBlogActivity
 import com.example.finalproject.Data.BlogContent
 import com.example.finalproject.Data.Comment
+import com.example.finalproject.Data.Friends
 import com.example.finalproject.Data.User
 import com.example.finalproject.MainScreenActivity
 import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_blog.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
+import kotlinx.android.synthetic.main.fragment_friends.*
 
 class BlogsFragment : Fragment() {
+
+    var friendsUid_List: ArrayList<String> = ArrayList()
     val adapter = GroupAdapter<GroupieViewHolder>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
         (activity as MainScreenActivity).supportActionBar?.title = "Blog"
 
     }
@@ -49,6 +55,7 @@ class BlogsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView_Infromation.adapter = adapter
         fetchBlog()
+        fetchFriends()
 
     }
 
@@ -97,6 +104,34 @@ class BlogsFragment : Fragment() {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if(hidden) {
+
+        }
+        else {
+            fetchBlog()
+            fetchFriends()
+        }
+    }
+
+    fun fetchFriends() {
+        var uid: String = FirebaseAuth.getInstance().currentUser!!.uid
+        var rootRef: DatabaseReference = FirebaseDatabase.getInstance().reference
+        var uidRef: DatabaseReference = rootRef.child("friends").child(uid)
+        uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val friends = p0.getValue(Friends::class.java)
+                friendsUid_List = ArrayList(friends!!.friends_uid_list)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+    }
 
 
     private fun addNewBlog() {
@@ -132,7 +167,7 @@ class BlogsFragment : Fragment() {
     }
 
 
-    class BlogItem(val Context : Context?, val blog: BlogContent) : Item<GroupieViewHolder>() {
+    inner class BlogItem(val Context : Context?, val blog: BlogContent) : Item<GroupieViewHolder>() {
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             val commentFragment = CommentFragment()
@@ -192,13 +227,35 @@ class BlogsFragment : Fragment() {
 
             viewHolder.itemView.addFriend_button.setOnClickListener{
                 // Add friends funciton
-            }
 
+                var friendId: String? = blog.uid
+                Log.d("chosen friend id", blog.uid)
+                Log.d("friends list", friendsUid_List.toString())
+                var uid: String? = FirebaseAuth.getInstance().uid
+                if (friendsUid_List.contains(friendId)) {
+                    Toast.makeText(activity, "This user already exists in your friend list.", Toast.LENGTH_LONG).show()
+                } else {
+
+                    friendsUid_List.add(friendId!!)
+                    var database: DatabaseReference = Firebase.database.reference
+                    database.child("friends").child(uid.toString())
+                        .child("friends_uid_list").setValue(friendsUid_List)
+
+                    Toast.makeText(
+                        activity,
+                        "Added new friend successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            }
         }
+
 
         override fun getLayout(): Int {
             return R.layout.bloglayout
         }
+
         private fun refresh(){
             val adapter = GroupAdapter<GroupieViewHolder>()
             adapter.notifyDataSetChanged()

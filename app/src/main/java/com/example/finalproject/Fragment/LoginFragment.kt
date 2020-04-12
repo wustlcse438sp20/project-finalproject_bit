@@ -23,8 +23,6 @@ class LoginFragment : Fragment() {
 
     lateinit var Login : Button
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,8 +68,6 @@ class LoginFragment : Fragment() {
 
 
                 }
-
-
         }
 
     }
