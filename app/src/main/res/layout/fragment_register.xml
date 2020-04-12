@@ -19,12 +19,12 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:text=""
-            app:layout_constraintBottom_toTopOf="@+id/Register_Password"
+            app:layout_constraintBottom_toTopOf="@+id/Reset_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/UserName"
+            android:id="@+id/Reset_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -38,7 +38,7 @@
             app:layout_constraintVertical_bias="0.995" />
 
         <EditText
-            android:id="@+id/Register_Password"
+            android:id="@+id/Reset_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="148dp"
@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/Register_button"
+            android:id="@+id/Reset_Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="152dp"
@@ -63,21 +63,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.473"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Register_Password" />
+            app:layout_constraintTop_toBottomOf="@+id/Reset_password" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/selectphoto_imageview_register"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            app:layout_constraintBottom_toBottomOf="@+id/Upload_photo"
-            app:layout_constraintEnd_toEndOf="@+id/Upload_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/Reset_photo"
+            app:layout_constraintEnd_toEndOf="@+id/Reset_photo"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/Upload_photo"
-            app:layout_constraintTop_toTopOf="@+id/Upload_photo"
+            app:layout_constraintStart_toStartOf="@+id/Reset_photo"
+            app:layout_constraintTop_toTopOf="@+id/Reset_photo"
             app:layout_constraintVertical_bias="0.0" />
 
         <Button
-            android:id="@+id/Upload_photo"
+            android:id="@+id/Reset_photo"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginStart="8dp"
@@ -89,12 +89,11 @@
             android:text="Select Photo"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/UserName"
+            app:layout_constraintBottom_toTopOf="@+id/Reset_username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.852" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

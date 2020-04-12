@@ -15,7 +15,7 @@ class ResetPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_reset_password)
 
 
-        Reset_button.setOnClickListener{
+        Reset_Button.setOnClickListener{
             val email = Reset_email.text.toString()
 
             Log.d("Reset","email"+ email)

@@ -2,9 +2,7 @@ package com.example.finalproject.Fragment
 
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,14 +16,11 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 
-import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_register.*
-import android.graphics.Bitmap
 
 
-import android.content.ContentResolver
 import com.example.finalproject.Data.Friends
 import com.example.finalproject.Data.User
 import com.google.firebase.database.DatabaseReference
@@ -36,7 +31,7 @@ class RegisterFragment : Fragment() {
 
     lateinit var Register : Button
     lateinit var Upload_Photo : Button
-    var selectedPhotoUri: Uri? = null
+    private var selectedPhotoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +46,11 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Upload_Photo = Upload_photo
-        Register = Register_button
+        Upload_Photo = Reset_photo
+        Register = Reset_Button
         Register.setOnClickListener {
             val Email = Register_Email.text.toString()
-            val Password = Register_Password.text.toString()
+            val Password = Reset_password.text.toString()
 
             if (Email.isEmpty()||Password.isEmpty()){
                 Toast.makeText(context,"Please input Email and Password", Toast.LENGTH_SHORT).show()
@@ -132,7 +127,7 @@ class RegisterFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("/users/$uid")
-        val user = User(uid!!, UserName.text.toString(), profileImageUri)
+        val user = User(uid!!, Reset_username.text.toString(), profileImageUri)
         myRef.setValue(user).addOnSuccessListener {
             Log.d("Register", "Upload information to database successful")
         }
