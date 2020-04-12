@@ -188,8 +188,8 @@ class BlogsFragment : Fragment() {
             Picasso.get().load(blog.imageUri).into(viewHolder.itemView.image)
 
             Log.d("Blog","Uid" + uid)
-            val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-            ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            val refer = FirebaseDatabase.getInstance().getReference("/users/$uid")
+            refer.addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                 }
 
@@ -231,14 +231,14 @@ class BlogsFragment : Fragment() {
                 var friendId: String? = blog.uid
                 Log.d("chosen friend id", blog.uid)
                 Log.d("friends list", friendsUid_List.toString())
-                var uid: String? = FirebaseAuth.getInstance().uid
+                var Uid: String? = FirebaseAuth.getInstance().uid
                 if (friendsUid_List.contains(friendId)) {
                     Toast.makeText(activity, "This user already exists in your friend list.", Toast.LENGTH_LONG).show()
                 } else {
 
                     friendsUid_List.add(friendId!!)
                     var database: DatabaseReference = Firebase.database.reference
-                    database.child("friends").child(uid.toString())
+                    database.child("friends").child(Uid.toString())
                         .child("friends_uid_list").setValue(friendsUid_List)
 
                     Toast.makeText(

@@ -75,18 +75,20 @@ class CommentFragment : Fragment() {
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
-            val uid = blog.uid
+            val Uid = blog.uid
 
-            val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+            val ref = FirebaseDatabase.getInstance().getReference("/users/$Uid")
             ref.addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
                     val user = p0.getValue(User::class.java)
-                    viewHolder.itemView.username1.text = user?.userName
-                    Picasso.get().load(user?.profileImage).into(viewHolder.itemView.avatar1)
+                    if(user != null) {
+                        viewHolder.itemView.username1.text = user.userName
+                        Picasso.get().load(user.profileImage).into(viewHolder.itemView.avatar1)
 //                    Log.d("CF","Username& Profileiamge"+ user?.userName  + user?.profileImage)
+                    }
                 }
 
             })

@@ -40,6 +40,7 @@ class FriendsFragment : Fragment() {
     var friendsUid_List: ArrayList<String> = ArrayList()
 
     lateinit var friend_search_Button: Button
+    lateinit var friend_undoSearch_Button: Button
     lateinit var friend_addBySearch_Button: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,46 +67,94 @@ class FriendsFragment : Fragment() {
             var searchFriend_input: String = friend_search_input.text.toString()
             if (!searchFriend_input.isEmpty()) {
 
-                //......
+                searchFriends(view, searchFriend_input)
             }
+        }
+
+        friend_undoSearch_Button = view.findViewById(R.id.friend_undoSearch_button)
+        friend_undoSearch_Button.setOnClickListener {
+
+            fetchFriends(view)
         }
 
         friend_addBySearch_Button = view.findViewById(R.id.friend_addBySearch_button)
         friend_addBySearch_Button.setOnClickListener {
             var addFriendBySearch_input: String = friend_addBySearch_input.text.toString()
             if (addFriendBySearch_input != "") {
-                var friendId: String = addFriendBySearch_input
+                fetchUidByEmail(addFriendBySearch_input, object : FriendAddCallback {
+                    override fun onCallback(user: User) {
 
-                if (friendsUid_List.contains(friendId)) {
-                    Toast.makeText(
-                        activity,
-                        "This user already exists in your friend list.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else if (!userUid_List.contains(friendId)) {
-                    Toast.makeText(activity, "This user id is invalid.", Toast.LENGTH_LONG).show()
-                } else {
-                    getFriendsFromFirebase(object : FriendsListCallback {
-                        override fun onCallback(friends: Friends) {
-
-                            friendsUid_List = ArrayList(friends.friends_uid_list)
-                            friendsUid_List.add(friendId)
-                            database.child("friends").child(uid.toString())
-                                .child("friends_uid_list").setValue(friendsUid_List)
-
-                            fetchFriends(view)
-
+                        if ( user == null) {
                             Toast.makeText(
                                 activity,
-                                "Added new friend successfully!",
+                                "This user email is invalid.",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    })
-                }
+                        else {
+                            var friendId: String = user.uid!!
+                            if (friendsUid_List.contains(friendId)) {
+                                Toast.makeText(
+                                    activity,
+                                    "This user already exists in your friend list.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                getFriendsFromFirebase(object : FriendsListCallback {
+                                    override fun onCallback(friends: Friends) {
+
+                                        friendsUid_List = ArrayList(friends.friends_uid_list)
+                                        friendsUid_List.add(friendId)
+                                        database.child("friends").child(uid.toString())
+                                            .child("friends_uid_list").setValue(friendsUid_List)
+
+                                        fetchFriends(view)
+
+                                        Toast.makeText(
+                                            activity,
+                                            "Added new friend successfully!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
             }
         }
     }
+
+    fun fetchUidByEmail(email : String, myCallback: FriendAddCallback)  {
+        val ref = FirebaseDatabase.getInstance().getReference("/users/")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot) {
+                var isValid : Boolean = true
+
+                p0.children.forEach {
+                    val user = it.getValue(User :: class.java)
+                    if (user!!.email == email) {
+                        isValid = false
+                        myCallback.onCallback(user)
+                    }
+                }
+
+                if (isValid) {
+                    Toast.makeText(
+                        activity,
+                        "This user email is invalid.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+    }
+
 
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -169,12 +218,12 @@ class FriendsFragment : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 var adapter = GroupAdapter<GroupieViewHolder>()
                 val friends = p0.getValue(Friends::class.java)
-                val friends_Uids = friends!!.friends_uid_list
-                Log.d("friends uids", friends_Uids.toString())
+                friendsUid_List = ArrayList(friends!!.friends_uid_list)
+                Log.d("friends uids", friendsUid_List.toString())
 
-                for (i in 0 until friends_Uids.size) {
+                for (i in 0 until friendsUid_List.size) {
 
-                    var uidRef2: DatabaseReference = rootRef.child("users").child(friends_Uids[i])
+                    var uidRef2: DatabaseReference = rootRef.child("users").child(friendsUid_List[i])
                     uidRef2.addListenerForSingleValueEvent(object : ValueEventListener {
 
                         override fun onDataChange(p1: DataSnapshot) {
@@ -201,6 +250,36 @@ class FriendsFragment : Fragment() {
         })
     }
 
+    fun searchFriends(view: View, username : String) {
+
+        var adapter = GroupAdapter<GroupieViewHolder>()
+
+        for (i in 0 until friendsUid_List.size) {
+            var rootRef: DatabaseReference = FirebaseDatabase.getInstance().reference
+            var uidRef: DatabaseReference = rootRef.child("users").child(friendsUid_List[i])
+            uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(p1: DataSnapshot) {
+                    var friend = p1.getValue(User::class.java)
+                    Log.d("Friend", friend!!.userName)
+                    if (username == friend!!.userName) {
+                        adapter.add(FriendItem(activity, view, friend))
+                        Log.d("Search friend is here!", friend!!.userName)
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+            })
+        }
+
+        var friendsList_Recyclerview =
+            view.findViewById<RecyclerView>(R.id.friendsList_recyclerview)
+        friendsList_Recyclerview.adapter = adapter
+    }
+
     fun getFriendsFromFirebase(myCallback: FriendsListCallback) {
         var uid: String = FirebaseAuth.getInstance().currentUser!!.uid
         var rootRef: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -221,7 +300,11 @@ class FriendsFragment : Fragment() {
     }
 
     interface FriendsListCallback {
-        fun onCallback(value: Friends)
+        fun onCallback(friends: Friends)
+    }
+
+    interface FriendAddCallback {
+        fun onCallback(user: User)
     }
 
 

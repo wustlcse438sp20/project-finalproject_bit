@@ -127,7 +127,7 @@ class RegisterFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("/users/$uid")
-        val user = User(uid!!, Reset_username.text.toString(), profileImageUri)
+        val user = User(uid!!, Register_Email.text.toString(), Reset_username.text.toString(), profileImageUri)
         myRef.setValue(user).addOnSuccessListener {
             Log.d("Register", "Upload information to database successful")
         }
