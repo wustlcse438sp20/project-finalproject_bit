@@ -18,12 +18,12 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:text=""
-            app:layout_constraintBottom_toTopOf="@+id/Register_Password"
+            app:layout_constraintBottom_toTopOf="@+id/Reset_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/Register_Password"
+            android:id="@+id/Reset_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="328dp"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.473"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Register_Password" />
+            app:layout_constraintTop_toBottomOf="@+id/Reset_password" />
 
         <TextView
             android:id="@+id/Reset"
@@ -58,8 +58,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/Login_button"
-            app:layout_constraintEnd_toEndOf="@+id/Register_Password"
-            app:layout_constraintStart_toStartOf="@+id/Register_Password"
-            app:layout_constraintTop_toBottomOf="@+id/Register_Password" />
+            app:layout_constraintEnd_toEndOf="@+id/Reset_password"
+            app:layout_constraintStart_toStartOf="@+id/Reset_password"
+            app:layout_constraintTop_toBottomOf="@+id/Reset_password" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
