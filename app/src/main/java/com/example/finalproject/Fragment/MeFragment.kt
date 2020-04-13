@@ -1,16 +1,25 @@
 package com.example.finalproject.Fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.provider.SyncStateContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.finalproject.Data.User
 import com.example.finalproject.MainActivity
@@ -20,13 +29,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.bloglayout.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
 import kotlinx.android.synthetic.main.fragment_me.*
 import kotlinx.android.synthetic.main.fragment_me.Reset_username
+import java.io.ByteArrayOutputStream
+import java.io.File
+
 
 
 class MeFragment : Fragment(){
     private  var selectedPhotoUri: Uri? = null
+    private  val REQUEST_CAMERA_PERMISSIONS = 1;
+    private  val IMAGE_CAPTURE_CODE = 2;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        (activity as MainScreenActivity).supportActionBar?.title = "Personal information"
@@ -53,6 +68,39 @@ class MeFragment : Fragment(){
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, 0)
+        }
+        Camera_Button.setOnClickListener{
+            var permission = ContextCompat.checkSelfPermission(this@MeFragment.context!!, android.Manifest.permission.CAMERA)
+
+            if(permission != PackageManager.PERMISSION_GRANTED) {
+               requestPermissions(arrayOf(android.Manifest.permission.CAMERA),REQUEST_CAMERA_PERMISSIONS)
+            } else {
+
+//                val cIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                startActivityForResult(cIntent, IMAGE_CAPTURE_CODE)
+
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+                if (takePictureIntent.resolveActivity(context?.getPackageManager()) != null) {
+                    val file = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        File(context?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS + "/attachments")!!.path,
+                            System.currentTimeMillis().toString() + ".jpg")
+                    } else {
+                        TODO("VERSION.SDK_INT < KITKAT")
+                    }
+
+                    selectedPhotoUri = FileProvider.getUriForFile(this@MeFragment.context!!, this@MeFragment.context!!.applicationContext.packageName + ".provider", file!!)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedPhotoUri)
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                        takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    }
+                    startActivityForResult(takePictureIntent, IMAGE_CAPTURE_CODE)
+                }
+
+
+
+
+            }
         }
         Reset_Button.setOnClickListener{
             upLoadPhotoToFirebaseStorage()
@@ -95,7 +143,19 @@ class MeFragment : Fragment(){
 
 
         }
+        if(requestCode == IMAGE_CAPTURE_CODE &&resultCode == Activity.RESULT_OK  ) {
+//                val bitmap = data!!.extras!!["data"] as Bitmap
+
+
+            val bitmap =
+                MediaStore.Images.Media.getBitmap(context?.contentResolver, selectedPhotoUri)
+                Reset_imageview.setImageBitmap(bitmap)
+//            selectedPhotoUri = getImageUriFromBitmap(this@MeFragment.context!!,bitmap)
+            Log.d("GetPhotp", "Photo uri" + selectedPhotoUri)
+
+        }
     }
+
     private fun fetchUserData(){
         getInformationFromFirebase(object: UserListCallback {
             override fun onCallback(user: User) {
