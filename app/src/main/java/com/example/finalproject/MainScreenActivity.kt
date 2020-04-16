@@ -6,10 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.example.finalproject.Fragment.BlogsFragment
-import com.example.finalproject.Fragment.FriendsFragment
-import com.example.finalproject.Fragment.MeFragment
-import com.example.finalproject.Fragment.VideoFragment
+import com.example.finalproject.Fragment.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_mainscreen.*
 
@@ -17,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_mainscreen.*
 class MainScreenActivity : AppCompatActivity() {
 
     private var blogsFragment: BlogsFragment? = null
-    private var videoFragment: VideoFragment? = null
+    private var ShowVideoFragment: ShowVideoFragment? = null
     private var friendsFragment: FriendsFragment? = null
     private var meFragment: MeFragment? = null
     private var currentIndex = 0
@@ -40,7 +37,7 @@ class MainScreenActivity : AppCompatActivity() {
         super.onAttachFragment(fragment)
         when(fragment) {
             is BlogsFragment -> blogsFragment ?: let { blogsFragment = fragment }
-            is VideoFragment -> videoFragment ?: let { videoFragment = fragment}
+            is ShowVideoFragment -> ShowVideoFragment ?: let { ShowVideoFragment = fragment}
             is FriendsFragment -> friendsFragment ?: let { friendsFragment = fragment}
             is MeFragment -> meFragment ?: let { meFragment = fragment }
         }
@@ -54,9 +51,9 @@ class MainScreenActivity : AppCompatActivity() {
                     add(R.id.container, it)
                 }
             }
-            videoFragment ?: let {
-                VideoFragment().let {
-                    videoFragment = it
+            ShowVideoFragment ?: let {
+                ShowVideoFragment().let {
+                    ShowVideoFragment = it
                     add(R.id.container, it)
                 }
             }
@@ -80,7 +77,7 @@ class MainScreenActivity : AppCompatActivity() {
                     }
                 }
                 R.id.bottom_navigation_video -> {
-                    videoFragment?.let {
+                    ShowVideoFragment?.let {
                         this.show(it)
                     }
                 }
@@ -106,7 +103,7 @@ class MainScreenActivity : AppCompatActivity() {
         blogsFragment?.let {
             transaction.hide(it)
         }
-        videoFragment?.let {
+        ShowVideoFragment?.let {
             transaction.hide(it)
         }
         friendsFragment?.let {

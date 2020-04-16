@@ -27,8 +27,8 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.activity_blog.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
+import kotlinx.android.synthetic.main.fragment_blogs.*
 import kotlinx.android.synthetic.main.fragment_friends.*
 
 class BlogsFragment : Fragment() {
@@ -65,28 +65,7 @@ class BlogsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-//        val manager = getSystemService(Context.SEARCH_SERVICE)as SearchManager
-//        val searchItem = menu?.findItem(R.id.blog_search)
-//        val searchView = searchItem?.actionView as SearchView
-//
-//        searchView.setOnQueryTextListener((object : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//               searchView.clearFocus()
-//               searchView.setQuery("",false)
-//                searchItem.collapseActionView()
-//
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//
-//        }))
-//
-//        return true
-//
-//    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
@@ -95,10 +74,6 @@ class BlogsFragment : Fragment() {
                 addNewBlog()
                 true
             }
-//            R.id.blog_search -> {
-//                searchBlog()
-//                true
-//            }
 
             else -> super.onOptionsItemSelected(item)
         }

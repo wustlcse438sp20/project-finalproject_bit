@@ -1,0 +1,190 @@
+package com.example.finalproject.Fragment
+
+import android.content.Context
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import android.view.*
+import android.widget.MediaController
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import com.example.finalproject.Data.BlogContent
+import com.example.finalproject.Data.Comment
+import com.example.finalproject.Data.User
+import com.example.finalproject.Data.VideoContent
+
+import com.example.finalproject.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.fragment_show_video.*
+import kotlinx.android.synthetic.main.fragment_video.view.*
+import kotlinx.android.synthetic.main.videolayout.*
+import kotlinx.android.synthetic.main.videolayout.view.*
+
+class ShowVideoFragment : Fragment() {
+    val adapter = GroupAdapter<GroupieViewHolder>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_show_video, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView_Video_Infromation.adapter = adapter
+        fetchVideo()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.blogmenu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.blog_add -> {
+                addNewVideo()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    private fun addNewVideo(){
+        val fragment = VideoFragment()
+        val transaction = activity!!.supportFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        var uid: String = FirebaseAuth.getInstance().currentUser!!.uid
+        bundle.putString("uid",uid)
+        fragment.arguments = bundle
+        transaction.replace(R.id.showVideo,fragment)
+        transaction.commit()
+    }
+    private fun fetchVideo(){
+
+        val ref = FirebaseDatabase.getInstance().getReference().child("video")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("Blog", p0.message)
+            }
+            val list = arrayListOf<BlogContent>()
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach {
+                    Log.d("Blog",it.toString())
+                    val video = it.getValue(VideoContent::class.java)
+
+                    if(video !=null){
+
+                        adapter.add(VideoItem(this@ShowVideoFragment.context,video))
+                    }
+                }
+
+            }
+        })
+
+
+
+    }
+    inner class VideoItem(val Context : Context?, val Video: VideoContent) : Item<GroupieViewHolder>() {
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+
+            val uid = Video.uid
+            val videoId = Video.videoId
+            viewHolder.itemView.video_description.text = Video.description
+            viewHolder.itemView.date.text = Video.date
+            viewHolder.itemView.address.text = Video.address
+            viewHolder.itemView.videoView.setVideoURI(Video.videoUri.toUri())
+            val mediaController = MediaController(this@ShowVideoFragment.context)
+            mediaController.setAnchorView(viewHolder.itemView.videoView)
+            viewHolder.itemView.videoView.setMediaController(mediaController)
+            viewHolder.itemView.videoView.start()
+            // fetch user avatar and username
+            val refer = FirebaseDatabase.getInstance().getReference("/users/$uid")
+            refer.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    val user = p0.getValue(User::class.java)
+                    viewHolder.itemView.username.text = user?.userName
+                    Picasso.get().load(user?.profileImage).into(viewHolder.itemView.avatar)
+                    Log.d("Blog", "Username& Profileiamge" + user?.userName + user?.profileImage)
+                }
+
+            })
+
+            viewHolder.itemView.favorite_button.setOnClickListener {
+                viewHolder.itemView.favorite_button.setImageResource(R.drawable.baseline_thumb_up_black_18dp)
+                var favoriteNumber = Video.favorite
+                favoriteNumber++
+
+                val myref =
+                    FirebaseDatabase.getInstance().getReference("/video/$videoId").child("favorite")
+                myref.setValue(favoriteNumber)
+                viewHolder.itemView.favorite_number.text = favoriteNumber.toString()
+                refresh()
+
+            }
+
+//            viewHolder.itemView.addFriend_button.setOnClickListener {
+//                // Add friends funciton
+//
+//                var friendId: String? = blog.uid
+//                Log.d("chosen friend id", blog.uid)
+//                Log.d("friends list", friendsUid_List.toString())
+//                var Uid: String? = FirebaseAuth.getInstance().uid
+//                if (friendsUid_List.contains(friendId)) {
+//                    Toast.makeText(
+//                        activity,
+//                        "This user already exists in your friend list.",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                } else {
+//
+//                    friendsUid_List.add(friendId!!)
+//                    var database: DatabaseReference = Firebase.database.reference
+//                    database.child("friends").child(Uid.toString())
+//                        .child("friends_uid_list").setValue(friendsUid_List)
+//
+//                    Toast.makeText(
+//                        activity,
+//                        "Added new friend successfully!",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//
+//            }
+        }
+
+
+        override fun getLayout(): Int {
+            return R.layout.videolayout
+        }
+
+        private fun refresh() {
+            val adapter = GroupAdapter<GroupieViewHolder>()
+            adapter.notifyDataSetChanged()
+        }
+    }
+}
+

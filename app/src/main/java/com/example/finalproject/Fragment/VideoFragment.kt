@@ -1,13 +1,37 @@
 package com.example.finalproject.Fragment
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.example.finalproject.Data.BlogContent
+import com.example.finalproject.Data.VideoContent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.bloglayout.*
+import kotlinx.android.synthetic.main.fragment_video.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class VideoFragment : Fragment() {
-
+    private val REQUEST_CAMERA_PERMISSIONS = 1;
+    private val VIDEO_CAPTURE = 9
+    private var videoUri : Uri ? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -21,5 +45,87 @@ class VideoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        takeVideo_button.setOnClickListener{
+            var permission = ContextCompat.checkSelfPermission(this@VideoFragment.context!!, android.Manifest.permission.CAMERA)
+
+            if(permission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.CAMERA),REQUEST_CAMERA_PERMISSIONS)
+            }
+            else {
+                val takeVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                // set file path by using fileprovider
+                if (takeVideoIntent.resolveActivity(context!!.getPackageManager()) != null) {
+                    val file = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        File(
+                            context?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS + "/attachments")!!.path,
+                            System.currentTimeMillis().toString() + ".mp4"
+                        )
+                    } else {
+                        TODO("VERSION.SDK_INT < KITKAT")
+                    }
+                    // get uri from filepath
+                    videoUri = FileProvider.getUriForFile(
+                        this@VideoFragment.context!!,
+                        this@VideoFragment.context!!.applicationContext.packageName + ".provider",
+                        file
+                    )
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,1)
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                        takeVideoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    }
+                    startActivityForResult(takeVideoIntent, VIDEO_CAPTURE)
+
+
+                }
+            }
+        }
+        videoSubmit_button.setOnClickListener{
+            upLoadVideoToFirebaseStorage()
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+
+        // load uri to video view
+        Video.setVideoURI(videoUri)
+        val mediaController = MediaController(this@VideoFragment.context)
+        mediaController?.setAnchorView(Video)
+        Video.setMediaController(mediaController)
+        Video.start()
+    }
+    private fun upLoadVideoToFirebaseStorage(){
+        if(videoUri == null) return
+        val fileName = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/video/$fileName")
+        ref.putFile(videoUri!!)
+            .addOnSuccessListener {
+                Log.d("Register", "Upload image successful")
+                ref.downloadUrl.addOnSuccessListener {
+                    Log.d("Register","image location "+it)
+                    upLoadInformation(it.toString())
+                }
+            }
+    }
+    private fun upLoadInformation(uri : String) {
+        val uid = arguments!!.getString("uid")
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat.getDateTimeInstance()
+        val formatedDate = formatter.format(date)
+        val filename = UUID.randomUUID().toString()
+        val description = video_describtion.text.toString()
+        val blogInformation =
+            VideoContent(uid, filename, uri, description, "St.Louis", formatedDate,0)
+
+        val ref = FirebaseDatabase.getInstance().getReference("/video/$filename/")
+        ref.setValue(blogInformation)
+            .addOnSuccessListener {
+                Log.d("AddVideo", "Add Video Success")
+
+            }
+            .addOnFailureListener {
+                Log.d("AddVideo", "Failed to set value to database: ${it.message}")
+            }
     }
 }
