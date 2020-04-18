@@ -4,86 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.FriendsFragment">
+    tools:context=".Fragment.BlogsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
 
-        <LinearLayout
-            android:id="@+id/friend_search"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/friend_addBySearch">
-
-            <EditText
-                android:id="@+id/friend_search_input"
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs2"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="2"
-                android:textSize="15dp"
-                android:hint="Search your friend by username" />
-
-            <Button
-                android:id="@+id/friend_search_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="0.1"
-                android:text="Search" />
-
-            <Button
-                android:id="@+id/friend_undoSearch_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="0.1"
-                android:text="Undo" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/friend_addBySearch"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/friend_search"
-            app:layout_constraintBottom_toTopOf="@id/friendsList_recyclerview">
-
-            <EditText
-                android:id="@+id/friend_addBySearch_input"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0.7"
-                android:textSize="15dp"
-                android:hint="Add new friend by email" />
-
-            <Button
-                android:id="@+id/friend_addBySearch_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="0.1"
-                android:text="Add" />
-
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                app:tabBackground="@color/colorPrimary"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabTextColor="@android:color/white"
+                app:layout_constraintBottom_toTopOf="@id/viewPager2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/friendsList_recyclerview"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/friend_addBySearch"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabs2">
+
+        </androidx.viewpager.widget.ViewPager>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

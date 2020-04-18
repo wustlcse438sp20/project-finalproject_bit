@@ -29,7 +29,7 @@ class MeFragment : Fragment(){
     private  var selectedPhotoUri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        (activity as MainScreenActivity).supportActionBar?.title = "Personal information"
+
     }
 
     override fun onCreateView(

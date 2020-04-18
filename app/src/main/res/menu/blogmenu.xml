@@ -9,6 +9,7 @@
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
+
     <item
         android:id="@+id/blog_add"
         android:icon="@drawable/baseline_add_white_18dp"

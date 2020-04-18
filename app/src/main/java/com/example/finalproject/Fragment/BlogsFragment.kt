@@ -10,6 +10,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finalproject.AddBlogActivity
@@ -29,18 +30,20 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_blog.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
-import kotlinx.android.synthetic.main.fragment_friends.*
+
 
 class BlogsFragment : Fragment() {
 
     var friendsUid_List: ArrayList<String> = ArrayList()
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    var adapter = GroupAdapter<GroupieViewHolder>()
+    var mSearchView : SearchView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        (activity as MainScreenActivity).supportActionBar?.title = "Blog"
+        //(activity as MainScreenActivity).supportActionBar?.title = "Blog"
 
     }
 
@@ -53,7 +56,6 @@ class BlogsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView_Infromation.adapter = adapter
         fetchBlog()
         fetchFriends()
 
@@ -61,6 +63,13 @@ class BlogsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.blogmenu, menu);
+
+        var searchItem = menu.findItem(R.id.blog_search);
+        mSearchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        mSearchView!!.setSubmitButtonEnabled(true)
+        mSearchView!!.setQueryHint("Search blog by key words");
+
+        setMenuListener();
 
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -95,14 +104,44 @@ class BlogsFragment : Fragment() {
                 addNewBlog()
                 true
             }
-//            R.id.blog_search -> {
-//                searchBlog()
-//                true
-//            }
+            R.id.blog_search -> {
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun setMenuListener(){
+
+        mSearchView!!.setOnCloseListener(SearchView.OnCloseListener {
+            fetchBlog()
+            //Toast.makeText(activity, "Close", Toast.LENGTH_SHORT).show()
+            false
+        })
+
+
+        mSearchView!!.setOnSearchClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                //Toast.makeText(activity, "Open", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        mSearchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+
+                searchBlog(s)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+
+                return false
+            }
+        })
+
+    }
+
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -142,6 +181,7 @@ class BlogsFragment : Fragment() {
 
 
     private fun fetchBlog() {
+        adapter = GroupAdapter<GroupieViewHolder>()
         val ref = FirebaseDatabase.getInstance().getReference().child("blog")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -161,11 +201,30 @@ class BlogsFragment : Fragment() {
 
             }
         })
-
-
-
+        recyclerView_Infromation.adapter = adapter
     }
 
+    fun searchBlog(key_words : String)  {
+        adapter = GroupAdapter<GroupieViewHolder>()
+        val ref = FirebaseDatabase.getInstance().getReference("/blog/")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                p0.children.forEach {
+                    val blog = it.getValue(BlogContent :: class.java)
+                    if (blog!!.title.contains( key_words) || blog!!.description.contains(key_words)) {
+                        adapter.add(BlogItem(this@BlogsFragment.context, blog))
+                    }
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+        recyclerView_Infromation.adapter = adapter
+    }
 
     inner class BlogItem(val Context : Context?, val blog: BlogContent) : Item<GroupieViewHolder>() {
 

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.finalproject.Data.ChatMessage
 import com.example.finalproject.Data.User
 import com.example.finalproject.Fragment.FriendsFragment
+import com.example.finalproject.Fragment.FriendsListFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -25,17 +26,18 @@ import kotlinx.android.synthetic.main.message_to_row.view.*
 class PrivatelyChatActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<GroupieViewHolder>()
+    val uid = FirebaseAuth.getInstance().uid
+    lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_privatelychat)
 
-        val user = intent.getParcelableExtra<User>(FriendsFragment.USER_KEY)
-        //val user_id = user.uid
+        user = intent.getParcelableExtra<User>(FriendsListFragment.USER_KEY)
+
+        supportActionBar?.title = user.userName
 
         recyclerview_messages.adapter = adapter
-
-        //setupDummyData()
         listenForMessages(user)
 
         message_send_button.setOnClickListener {
@@ -43,8 +45,9 @@ class PrivatelyChatActivity : AppCompatActivity() {
         }
     }
 
+
     private fun listenForMessages(user : User){
-         val ref = FirebaseDatabase.getInstance().getReference("/messages")
+        val ref = FirebaseDatabase.getInstance().getReference("/messages")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -52,7 +55,7 @@ class PrivatelyChatActivity : AppCompatActivity() {
                 Log.d("chatMessage", chatMessage!!.text)
 
                 if(chatMessage.fromId == FirebaseAuth.getInstance().uid && chatMessage.toId == user.uid) {
-                    val currentUser = FriendsFragment.currentUser
+                    val currentUser = FriendsListFragment.currentUser
                     adapter.add(ChatToItem(chatMessage.text, currentUser!!))
                 }
                 if(chatMessage.fromId == user.uid && chatMessage.toId == FirebaseAuth.getInstance().uid){
@@ -85,13 +88,20 @@ class PrivatelyChatActivity : AppCompatActivity() {
         val toId = user.uid
 
         val reference = FirebaseDatabase.getInstance().getReference("/messages").push()
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
 
         val chatMessage = ChatMessage(reference.key!!, text, fromId!!, toId!!, System.currentTimeMillis() / 1000)
 
         reference.setValue(chatMessage)
             .addOnSuccessListener {
                 Log.d("Saved our chat message ", reference.key)
+
             }
+
+        latestMessageRef.setValue(chatMessage)
+        latestMessageToRef.setValue(chatMessage)
+
     }
 }
 
