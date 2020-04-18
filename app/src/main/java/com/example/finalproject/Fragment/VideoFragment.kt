@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.finalproject.Data.BlogContent
 import com.example.finalproject.Data.VideoContent
+import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -29,9 +30,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class VideoFragment : Fragment() {
+
     private val REQUEST_CAMERA_PERMISSIONS = 1;
     private val VIDEO_CAPTURE = 9
     private var videoUri : Uri ? = null
+    private val GALLERY = 12
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -81,19 +84,56 @@ class VideoFragment : Fragment() {
                 }
             }
         }
+        gallery_button.setOnClickListener{
+//            chooseVideoFromGallary()
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "video/*"
+            startActivityForResult(intent, 3)
+        }
         videoSubmit_button.setOnClickListener{
             upLoadVideoToFirebaseStorage()
+
+
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-
         // load uri to video view
-        Video.setVideoURI(videoUri)
-        val mediaController = MediaController(this@VideoFragment.context)
-        mediaController?.setAnchorView(Video)
-        Video.setMediaController(mediaController)
-        Video.start()
+       if(requestCode == VIDEO_CAPTURE && resultCode == Activity.RESULT_OK ) {
+           Video.setVideoURI(videoUri)
+           val mediaController = MediaController(this@VideoFragment.context)
+           mediaController?.setAnchorView(Video)
+           Video.setMediaController(mediaController)
+           Video.requestFocus()
+           Video.start()
+       }
+        if (requestCode == GALLERY&& resultCode == Activity.RESULT_OK) {
+            Log.d("what", "gale")
+            if (data != null) {
+               videoUri = data!!.data
+
+//
+
+                Video.setVideoURI(videoUri)
+                val mediaController = MediaController(this@VideoFragment.context)
+                mediaController?.setAnchorView(Video)
+                Video.setMediaController(mediaController)
+                Video.requestFocus()
+                Video.start()
+
+            }
+        }
+        if(requestCode ==3 && resultCode == Activity.RESULT_OK){
+            videoUri = data!!.data
+
+//            val selectedVideoPath = getPath(videoUri)
+            Video.setVideoURI(videoUri)
+            val mediaController = MediaController(this@VideoFragment.context)
+            mediaController?.setAnchorView(Video)
+            Video.setMediaController(mediaController)
+            Video.requestFocus()
+            Video.start()
+        }
     }
     private fun upLoadVideoToFirebaseStorage(){
         if(videoUri == null) return
@@ -101,9 +141,8 @@ class VideoFragment : Fragment() {
         val ref = FirebaseStorage.getInstance().getReference("/video/$fileName")
         ref.putFile(videoUri!!)
             .addOnSuccessListener {
-                Log.d("Register", "Upload image successful")
+                Log.d("Video", "Upload video uri successful")
                 ref.downloadUrl.addOnSuccessListener {
-                    Log.d("Register","image location "+it)
                     upLoadInformation(it.toString())
                 }
             }
@@ -128,4 +167,25 @@ class VideoFragment : Fragment() {
                 Log.d("AddVideo", "Failed to set value to database: ${it.message}")
             }
     }
+//    private fun chooseVideoFromGallary() {
+//        val galleryIntent = Intent(
+//            Intent.ACTION_PICK,
+//            android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+//        )
+//
+//        startActivityForResult(galleryIntent, GALLERY)
+//    }
+//    private fun getPath(uri: Uri?): String? {
+//        val projection = arrayOf(MediaStore.Video.Media.DATA)
+//        val cursor = context!!.contentResolver.query(uri!!, projection, null, null, null)
+//        if (cursor != null) {
+//            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+//            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+//            val column_index = cursor!!
+//                .getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+//            cursor!!.moveToFirst()
+//            return cursor!!.getString(column_index)
+//        } else
+//            return null
+//    }
 }

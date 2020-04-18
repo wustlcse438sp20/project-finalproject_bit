@@ -33,8 +33,8 @@ import kotlinx.android.synthetic.main.fragment_friends.*
 
 class BlogsFragment : Fragment() {
 
-    var friendsUid_List: ArrayList<String> = ArrayList()
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    private var friendsUid_List: ArrayList<String> = ArrayList()
+    private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

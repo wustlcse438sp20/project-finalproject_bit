@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -85,17 +87,25 @@
     </RelativeLayout>
 
 
-    <VideoView
-        android:id="@+id/videoView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_gravity="center_vertical" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/video_description"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="TextView" />
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/video_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/videoView"
+            android:layout_marginTop="8dp"
+            android:text="TextView" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

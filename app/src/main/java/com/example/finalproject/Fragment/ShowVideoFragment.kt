@@ -10,10 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import com.example.finalproject.Data.BlogContent
-import com.example.finalproject.Data.Comment
-import com.example.finalproject.Data.User
-import com.example.finalproject.Data.VideoContent
+import com.example.finalproject.Data.*
 
 import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
@@ -28,10 +25,11 @@ import kotlinx.android.synthetic.main.fragment_show_video.*
 import kotlinx.android.synthetic.main.fragment_video.view.*
 import kotlinx.android.synthetic.main.videolayout.*
 import kotlinx.android.synthetic.main.videolayout.view.*
+import java.util.ArrayList
 
 class ShowVideoFragment : Fragment() {
     val adapter = GroupAdapter<GroupieViewHolder>()
-
+    private var friendsUid_List: ArrayList<String> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -49,6 +47,7 @@ class ShowVideoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView_Video_Infromation.adapter = adapter
         fetchVideo()
+        fetchFriends()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -67,6 +66,19 @@ class ShowVideoFragment : Fragment() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if(hidden) {
+
+        }
+        else {
+            fetchVideo()
+            fetchFriends()
         }
     }
     private fun addNewVideo(){
@@ -101,8 +113,22 @@ class ShowVideoFragment : Fragment() {
             }
         })
 
+    }
+    fun fetchFriends() {
+        var uid: String = FirebaseAuth.getInstance().currentUser!!.uid
+        var rootRef: DatabaseReference = FirebaseDatabase.getInstance().reference
+        var uidRef: DatabaseReference = rootRef.child("friends").child(uid)
+        uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
+            override fun onDataChange(p0: DataSnapshot) {
+                val friends = p0.getValue(Friends::class.java)
+                friendsUid_List = ArrayList(friends!!.friends_uid_list)
+            }
 
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
     }
     inner class VideoItem(val Context : Context?, val Video: VideoContent) : Item<GroupieViewHolder>() {
 
@@ -146,34 +172,30 @@ class ShowVideoFragment : Fragment() {
 
             }
 
-//            viewHolder.itemView.addFriend_button.setOnClickListener {
-//                // Add friends funciton
-//
-//                var friendId: String? = blog.uid
-//                Log.d("chosen friend id", blog.uid)
-//                Log.d("friends list", friendsUid_List.toString())
-//                var Uid: String? = FirebaseAuth.getInstance().uid
-//                if (friendsUid_List.contains(friendId)) {
-//                    Toast.makeText(
-//                        activity,
-//                        "This user already exists in your friend list.",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                } else {
-//
-//                    friendsUid_List.add(friendId!!)
-//                    var database: DatabaseReference = Firebase.database.reference
-//                    database.child("friends").child(Uid.toString())
-//                        .child("friends_uid_list").setValue(friendsUid_List)
-//
-//                    Toast.makeText(
-//                        activity,
-//                        "Added new friend successfully!",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//
-//            }
+            viewHolder.itemView.addFriend_button.setOnClickListener{
+                // Add friends funciton
+
+                var friendId: String? = Video.uid
+                Log.d("chosen friend id", Video.uid)
+                Log.d("friends list", friendsUid_List.toString())
+                var Uid: String? = FirebaseAuth.getInstance().uid
+                if (friendsUid_List.contains(friendId)) {
+                    Toast.makeText(activity, "This user already exists in your friend list.", Toast.LENGTH_LONG).show()
+                } else {
+
+                    friendsUid_List.add(friendId!!)
+                    var database: DatabaseReference = Firebase.database.reference
+                    database.child("friends").child(Uid.toString())
+                        .child("friends_uid_list").setValue(friendsUid_List)
+
+                    Toast.makeText(
+                        activity,
+                        "Added new friend successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+            }
         }
 
 
