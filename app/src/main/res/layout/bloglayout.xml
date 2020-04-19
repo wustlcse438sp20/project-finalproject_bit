@@ -151,6 +151,8 @@
             android:layout_marginLeft="140dp"
             android:layout_toEndOf="@+id/addFriend_button"
             android:layout_toRightOf="@+id/addFriend_button"
+            android:contentDescription=""
+            android:longClickable="true"
             android:visibility="visible"
             app:srcCompat="@drawable/baseline_thumb_up_white_18dp"
             tools:visibility="visible" />

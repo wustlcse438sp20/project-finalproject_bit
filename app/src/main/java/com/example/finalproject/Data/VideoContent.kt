@@ -5,9 +5,8 @@ class VideoContent (val uid : String?,
                     val videoId : String,
                     val videoUri : String,
                     val description: String,
-                    val address: String,
                     val date : String,
                     val favorite : Int
 ){
-    constructor():this("","","","","","",0)
+    constructor():this("","","","","",0)
 }

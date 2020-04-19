@@ -83,6 +83,11 @@ class VideoFragment : Fragment() {
 
                 }
             }
+
+        }
+        takeVideo_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
         }
         gallery_button.setOnClickListener{
 //            chooseVideoFromGallary()
@@ -90,10 +95,19 @@ class VideoFragment : Fragment() {
             intent.type = "video/*"
             startActivityForResult(intent, 3)
         }
+        gallery_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
+        }
         videoSubmit_button.setOnClickListener{
             upLoadVideoToFirebaseStorage()
 
+            Toast.makeText(context, "Video upload success, please return",Toast.LENGTH_SHORT).show()
 
+        }
+        videoSubmit_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -155,7 +169,7 @@ class VideoFragment : Fragment() {
         val filename = UUID.randomUUID().toString()
         val description = video_describtion.text.toString()
         val blogInformation =
-            VideoContent(uid, filename, uri, description, "St.Louis", formatedDate,0)
+            VideoContent(uid, filename, uri, description,formatedDate,0)
 
         val ref = FirebaseDatabase.getInstance().getReference("/video/$filename/")
         ref.setValue(blogInformation)

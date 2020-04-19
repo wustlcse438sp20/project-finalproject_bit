@@ -103,6 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/videoView"
             android:layout_marginTop="8dp"
+            android:textSize="20dp"
             android:text="TextView" />
 
     </RelativeLayout>
@@ -113,24 +114,12 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="99dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="103dp"
-            android:layout_toEndOf="@+id/address"
-            android:layout_toRightOf="@+id/address"
             android:text="TextView"
-            android:textStyle="italic"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="301dp"
-            android:layout_height="match_parent"
-            android:text="TextView"
-            android:textStyle="italic"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
 
     </RelativeLayout>

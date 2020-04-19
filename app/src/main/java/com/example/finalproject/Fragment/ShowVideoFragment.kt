@@ -138,7 +138,7 @@ class ShowVideoFragment : Fragment() {
             val videoId = Video.videoId
             viewHolder.itemView.video_description.text = Video.description
             viewHolder.itemView.date.text = Video.date
-            viewHolder.itemView.address.text = Video.address
+//            viewHolder.itemView.address.text = Video.address
             viewHolder.itemView.videoView.setVideoURI(Video.videoUri.toUri())
             val mediaController = MediaController(this@ShowVideoFragment.context)
             mediaController.setAnchorView(viewHolder.itemView.videoView)
