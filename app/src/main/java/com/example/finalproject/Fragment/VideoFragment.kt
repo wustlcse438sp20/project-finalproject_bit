@@ -86,6 +86,11 @@ class VideoFragment : Fragment() {
 
                 }
             }
+
+        }
+        takeVideo_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
         }
 
         gallery_button.setOnClickListener{
@@ -95,8 +100,18 @@ class VideoFragment : Fragment() {
             startActivityForResult(intent, 3)
         }
 
+        gallery_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
+        }
+
         videoSubmit_button.setOnClickListener{
             upLoadVideoToFirebaseStorage()
+
+        }
+        videoSubmit_button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
         }
     }
 
@@ -166,6 +181,7 @@ class VideoFragment : Fragment() {
         ref.setValue(blogInformation)
             .addOnSuccessListener {
                 Log.d("AddVideo", "Add Video Success")
+
                 Toast.makeText(
                     activity,
                     "Uploaded successfully!",
@@ -174,7 +190,6 @@ class VideoFragment : Fragment() {
                 val intent = Intent(activity, MainScreenActivity::class.java)
                 intent.putExtra("FromWhere", "VideoFragment")
                 startActivity(intent)
-
             }
             .addOnFailureListener {
                 Log.d("AddVideo", "Failed to set value to database: ${it.message}")
