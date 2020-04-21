@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.finalproject.Data.ChatMessage
+import com.example.finalproject.Data.LatestMessage
 import com.example.finalproject.Data.User
 import com.example.finalproject.Fragment.FriendsFragment
 import com.example.finalproject.Fragment.FriendsListFragment
@@ -92,6 +93,8 @@ class PrivatelyChatActivity : AppCompatActivity() {
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
 
         val chatMessage = ChatMessage(reference.key!!, text, fromId!!, toId!!, System.currentTimeMillis() / 1000)
+        val latestMessage1 = LatestMessage(reference.key!!, text, fromId!!, toId!!, System.currentTimeMillis() / 1000, true)
+        val latestMessage2 = LatestMessage(reference.key!!, text, fromId!!, toId!!, System.currentTimeMillis() / 1000, false)
 
         reference.setValue(chatMessage)
             .addOnSuccessListener {
@@ -99,8 +102,8 @@ class PrivatelyChatActivity : AppCompatActivity() {
 
             }
 
-        latestMessageRef.setValue(chatMessage)
-        latestMessageToRef.setValue(chatMessage)
+        latestMessageRef.setValue(latestMessage1)
+        latestMessageToRef.setValue(latestMessage2)
 
     }
 }

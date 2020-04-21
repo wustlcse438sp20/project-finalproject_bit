@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.finalproject.Data.BlogContent
 import com.example.finalproject.Data.Comment
+import com.example.finalproject.Fragment.BlogsFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,6 +38,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AddBlogActivity : AppCompatActivity() {
@@ -135,7 +137,8 @@ class AddBlogActivity : AppCompatActivity() {
         val formatter = SimpleDateFormat.getDateTimeInstance()
         val formatedDate = formatter.format(date)
         val filename = UUID.randomUUID().toString()
-        val blogInformation = BlogContent(UserId,filename,title,description,Uri,address,formatedDate,0,isPublic,showDate,showAddress)
+        val blogInformation = BlogContent(UserId,filename,title,description,Uri,address,formatedDate,0,
+            ArrayList<String>(),isPublic,showDate,showAddress)
 
 
 
@@ -143,11 +146,22 @@ class AddBlogActivity : AppCompatActivity() {
         ref.setValue(blogInformation)
             .addOnSuccessListener {
                 Log.d("AddBlog","Success")
-//                val itent = Intent(this,BlogActivity::class.java)
-//                startActivity(itent)
+                Toast.makeText(
+                    this,
+                    "Uploaded successfully!",
+                    Toast.LENGTH_LONG
+                ).show()
+                val itent = Intent(this,MainScreenActivity::class.java)
+                intent.putExtra("FromWhere", "BlogsFragment")
+                startActivity(itent)
             }
             .addOnFailureListener {
                 Log.d("AddBlog", "Failed to set value to database: ${it.message}")
+                Toast.makeText(
+                    this,
+                    "Failed to upload the new blog!",
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
     private fun setMapLongClick(map: GoogleMap) {

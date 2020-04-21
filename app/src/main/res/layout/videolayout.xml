@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:background="#cfcfcf">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2.5dp"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/avatar"
+            android:layout_toRightOf="@+id/avatar"
+            android:text="Username"
+            android:textSize="20dp" />
+
+        <ImageButton
+            android:id="@+id/addFriend_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/favorite_button"
+            app:srcCompat="@drawable/baseline_perm_identity_white_18dp"
+            android:background="#cfcfcf"/>
+
+        <ImageButton
+            android:id="@+id/favorite_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/favorite_number"
+            android:visibility="visible"
+            app:srcCompat="@drawable/baseline_thumb_up_white_18dp"
+            tools:visibility="visible"
+            android:background="#cfcfcf"/>
+
+        <TextView
+            android:id="@+id/favorite_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="9dp"
+            android:layout_marginTop="7dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/video_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/videoView"
+            android:layout_marginTop="8dp"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="15dp">
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="301dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:text="TextView"
+            android:textStyle="italic"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="99dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="TextView"
+            android:gravity="right"
+            android:textStyle="italic"
+            android:textSize="12sp"/>
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

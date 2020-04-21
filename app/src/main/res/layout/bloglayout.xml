@@ -8,66 +8,55 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginTop="18dp"
         android:background="#cfcfcf">
 
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="2.5dp"
+            android:layout_marginLeft="10dp"/>
+
         <TextView
-            android:id="@+id/favorite_number"
+            android:id="@+id/username"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="7dp"
-            android:layout_toEndOf="@+id/imageView2"
-            android:layout_toRightOf="@+id/imageView2"
-            android:gravity="center_vertical"
-            android:text="0"
-            android:textSize="20dp"
-            android:textColor="#FFFFFF"/>
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/avatar"
+            android:layout_toRightOf="@+id/avatar"
+            android:text="Username"
+            android:textSize="20dp"/>
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/addFriend_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/baseline_favorite_border_white_18dp" />
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:background="#cfcfcf"
+            app:srcCompat="@drawable/baseline_perm_identity_white_18dp" />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#FFFFFF">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginStart="18dp"
-            android:layout_marginLeft="18dp"
-            android:layout_toEndOf="@+id/favorite_number"
-            android:layout_toRightOf="@+id/favorite_number"
             android:text="TextView"
             android:textSize="35dp"
             android:textStyle="bold" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="38dp"
-            android:layout_marginLeft="38dp"
-            android:layout_toEndOf="@+id/title"
-            android:layout_toRightOf="@+id/title" />
-
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_toEndOf="@+id/avatar"
-            android:layout_toRightOf="@+id/avatar"
-            android:text="Username"
-            android:textSize="20dp" />
 
 
     </RelativeLayout>
@@ -83,7 +72,7 @@
     <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="112dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
         android:textSize="20dp"
@@ -99,11 +88,13 @@
             android:layout_width="99dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="103dp"
             android:layout_toEndOf="@+id/address"
             android:layout_toRightOf="@+id/address"
             android:text="TextView"
+            android:gravity="right"
             android:textStyle="italic"
             android:textSize="12sp"/>
 
@@ -112,66 +103,104 @@
             android:layout_width="301dp"
             android:layout_height="match_parent"
             android:text="TextView"
-            android:textStyle="italic"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
     </RelativeLayout>
 
 
-    <FrameLayout
-        android:id="@+id/comment_Fragment"
-        android:layout_width="match_parent"
-        android:layout_height="120dp" />
-
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#cfcfcf">
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/favorite_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="140dp"
+            android:layout_alignParentLeft="true"
+            android:visibility="visible"
+            app:srcCompat="@drawable/baseline_thumb_up_white_18dp"
+            android:background="#FFFFFF"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/favorite_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/favorite_button"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textSize="20dp"
+            android:textColor="#000000"/>
 
         <EditText
             android:id="@+id/comment"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="100dp"
-            android:layout_toEndOf="@+id/comment_button"
-            android:layout_toRightOf="@+id/comment_button"
-            android:ems="10"
+            android:layout_toLeftOf="@+id/comment_button"
             android:hint="Input comment here"
             android:inputType="textPersonName"
             android:text="" />
 
         <ImageButton
-            android:id="@+id/favorite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="140dp"
-            android:layout_toEndOf="@+id/addFriend_button"
-            android:layout_toRightOf="@+id/addFriend_button"
-            android:visibility="visible"
-            app:srcCompat="@drawable/baseline_thumb_up_white_18dp"
-            tools:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/addFriend_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/baseline_perm_identity_white_18dp" />
-
-        <ImageButton
             android:id="@+id/comment_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="220dp"
-            android:layout_toEndOf="@+id/favorite_button"
-            android:layout_toRightOf="@+id/favorite_button"
-            app:srcCompat="@drawable/baseline_create_white_18dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/baseline_create_white_18dp"
+            android:background="#FFFFFF"/>
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comments"
+        android:textSize="15sp"
+        android:textStyle="italic" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/simpleComment_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentLeft="true"
+            android:text=""
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/simpleComment_comment"
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@+id/simpleComment_username"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/allCommentsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="See all comments"
+        android:textSize="15dp"
+        android:textColor="#4169E1"
+        android:layout_marginLeft="35dp"
+        android:gravity="top"/>
 
 </LinearLayout>

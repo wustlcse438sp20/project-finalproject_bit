@@ -45,6 +45,7 @@ class FriendsFragment : Fragment() {
 
         }
         else {
+            (activity as MainScreenActivity).supportActionBar?.title = "Friends"
             FriendsListFragment().fetchCurrentUser()
             FriendsListFragment().fetchUsers()
             FriendsListFragment().fetchFriends(view!!)

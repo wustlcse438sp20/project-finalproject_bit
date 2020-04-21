@@ -324,7 +324,6 @@ class FriendsListFragment : Fragment() {
 
             viewHolder.itemView.friends_item_chat_button.setOnClickListener {
                 var intent = Intent(activity, PrivatelyChatActivity::class.java)
-                //intent.putExtra("chosen_user_id", user.uid)
                 intent.putExtra(USER_KEY, user)
                 activity?.startActivity(intent)
             }

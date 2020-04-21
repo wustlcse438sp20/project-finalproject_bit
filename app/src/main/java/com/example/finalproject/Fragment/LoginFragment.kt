@@ -55,6 +55,7 @@ class LoginFragment : Fragment() {
                     if (it.isSuccessful) {
                         Log.d(ContentValues.TAG, "login successful")
                         val intent = Intent(this@LoginFragment.context,MainScreenActivity::class.java)
+                        intent.putExtra("FromWhere", "LoginFragment")
                         startActivity(intent)
 
                     } else {

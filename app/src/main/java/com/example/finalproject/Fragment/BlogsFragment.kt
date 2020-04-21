@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.BoringLayout
 import android.util.Log
 import android.view.*
 import android.widget.SearchView
@@ -13,12 +14,11 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.finalproject.AddBlogActivity
+import com.example.finalproject.*
 import com.example.finalproject.Data.BlogContent
 import com.example.finalproject.Data.Comment
 import com.example.finalproject.Data.Friends
 import com.example.finalproject.Data.User
-import com.example.finalproject.MainScreenActivity
 import com.example.finalproject.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -28,8 +28,10 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.activity_blog.*
+import kotlinx.android.synthetic.main.bloglayout.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
+import kotlinx.android.synthetic.main.fragment_blogs.*
+import kotlinx.android.synthetic.main.fragment_friends.*
 
 
 class BlogsFragment : Fragment() {
@@ -37,6 +39,7 @@ class BlogsFragment : Fragment() {
     var friendsUid_List: ArrayList<String> = ArrayList()
     var adapter = GroupAdapter<GroupieViewHolder>()
     var mSearchView : SearchView? = null
+    var currentId : String = FirebaseAuth.getInstance().uid.toString()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +48,13 @@ class BlogsFragment : Fragment() {
 
         //(activity as MainScreenActivity).supportActionBar?.title = "Blog"
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        fetchBlog()
+        fetchFriends()
     }
 
     override fun onCreateView(
@@ -56,6 +66,7 @@ class BlogsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView_Infromation.adapter = adapter
         fetchBlog()
         fetchFriends()
 
@@ -74,28 +85,6 @@ class BlogsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-//        val manager = getSystemService(Context.SEARCH_SERVICE)as SearchManager
-//        val searchItem = menu?.findItem(R.id.blog_search)
-//        val searchView = searchItem?.actionView as SearchView
-//
-//        searchView.setOnQueryTextListener((object : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//               searchView.clearFocus()
-//               searchView.setQuery("",false)
-//                searchItem.collapseActionView()
-//
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//
-//        }))
-//
-//        return true
-//
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
@@ -150,6 +139,7 @@ class BlogsFragment : Fragment() {
 
         }
         else {
+            (activity as MainScreenActivity).supportActionBar?.title = "Blogs"
             fetchBlog()
             fetchFriends()
         }
@@ -187,7 +177,7 @@ class BlogsFragment : Fragment() {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("Blog", p0.message)
             }
-            val list = arrayListOf<BlogContent>()
+
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {
                     Log.d("Blog",it.toString())
@@ -228,23 +218,24 @@ class BlogsFragment : Fragment() {
 
     inner class BlogItem(val Context : Context?, val blog: BlogContent) : Item<GroupieViewHolder>() {
 
+        var favoriteNum : Int = blog.favorite
+
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            val commentFragment = CommentFragment()
+            //val commentFragment = CommentFragment()
             val blogId = blog.blogId
             val uid = blog.uid
-            val bundle = Bundle()
-            bundle.putString("blogId", blogId)
-            commentFragment.arguments = bundle
-            val fragmentTransaction= (Context as AppCompatActivity).supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.comment_Fragment, commentFragment)
-            fragmentTransaction.commit()
-
+            var isMyFavorite : Boolean = false
 
             viewHolder.itemView.title.text = blog.title
             viewHolder.itemView.description.text = blog.description
+            viewHolder.itemView.favorite_number.text = blog.favorite.toString()
             if(blog.showDate)viewHolder.itemView.date.text=blog.date
             if(blog.showAddress) viewHolder.itemView.address.text=blog.address
             Picasso.get().load(blog.imageUri).into(viewHolder.itemView.image)
+            if(blog.favoriteList.contains(FirebaseAuth.getInstance().uid)) {
+                viewHolder.itemView.favorite_button.setImageResource(R.drawable.baseline_thumb_up_black_18dp)
+                isMyFavorite = true
+            }
 
             Log.d("Blog","Uid" + uid)
             val refer = FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -261,17 +252,63 @@ class BlogsFragment : Fragment() {
 
             })
 
+            val ref = FirebaseDatabase.getInstance().getReference("/comment/$blogId")
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    p0.children.forEach {
+                        val comment = it.getValue(Comment::class.java)
+                        if (comment != null){
+                            val ref = FirebaseDatabase.getInstance().getReference("/users/${comment.uid}")
+                            ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                                override fun onCancelled(p0: DatabaseError) {
+                                }
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    val user = p0.getValue(User::class.java)
+                                    if(user != null) {
+                                        viewHolder.itemView.simpleComment_username.text = user.userName + " :"
+                                    }
+                                }
+                            })
+                            viewHolder.itemView.simpleComment_comment.text = comment.content
+                        }
+                    }
+                }
+            })
+
             viewHolder.itemView.favorite_button.setOnClickListener{
-                viewHolder.itemView.favorite_button.setImageResource(R.drawable.baseline_thumb_up_black_18dp)
-                var favoriteNumber = blog.favorite
-                favoriteNumber ++
+                if (isMyFavorite) {
+                    isMyFavorite = !isMyFavorite
+                    viewHolder.itemView.favorite_button.setImageResource(R.drawable.baseline_thumb_up_white_18dp)
+                    favoriteNum --
 
-                val myref = FirebaseDatabase.getInstance().getReference("/blog/$blogId").child("favorite")
-                myref.setValue(favoriteNumber)
-                viewHolder.itemView.favorite_number.text = favoriteNumber.toString()
-                refresh()
+                    val myref = FirebaseDatabase.getInstance().getReference("/blog/$blogId").child("favorite")
+                    myref.setValue(favoriteNum)
+                    val myref2 = FirebaseDatabase.getInstance().getReference("/blog/$blogId").child("favoriteList")
+                    val currentList = ArrayList(blog.favoriteList)
+                    currentList.remove(currentId)
+                    myref2.setValue(currentList)
+                    viewHolder.itemView.favorite_number.text = favoriteNum.toString()
+                    refresh()
+                }
+                else {
+                    isMyFavorite = !isMyFavorite
+                    viewHolder.itemView.favorite_button.setImageResource(R.drawable.baseline_thumb_up_black_18dp)
+                    favoriteNum ++
 
+                    val myref = FirebaseDatabase.getInstance().getReference("/blog/$blogId").child("favorite")
+                    myref.setValue(favoriteNum)
+                    val myref2 = FirebaseDatabase.getInstance().getReference("/blog/$blogId").child("favoriteList")
+                    val currentList = ArrayList(blog.favoriteList)
+                    currentList.add(currentId)
+                    myref2.setValue(currentList)
+                    viewHolder.itemView.favorite_number.text = favoriteNum.toString()
+                    refresh()
+                }
             }
+
             viewHolder.itemView.comment_button.setOnClickListener{
                 val comment = viewHolder.itemView.comment.text.toString()
                 val commentUid = FirebaseAuth.getInstance().uid
@@ -279,9 +316,40 @@ class BlogsFragment : Fragment() {
                 val commentContent = Comment(commentUid,blogId,comment)
                 ref.setValue(commentContent).addOnSuccessListener {
                     Log.d("AC","add comment success")
+                    Toast.makeText(
+                        activity,
+                        "Comment successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 viewHolder.itemView.comment.text.clear()
                 refresh()
+
+                val ref2 = FirebaseDatabase.getInstance().getReference("/comment/$blogId")
+                ref2.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        p0.children.forEach {
+                            val comment = it.getValue(Comment::class.java)
+                            if (comment != null){
+                                val ref3 = FirebaseDatabase.getInstance().getReference("/users/${comment.uid}")
+                                ref3.addListenerForSingleValueEvent(object :ValueEventListener{
+                                    override fun onCancelled(p0: DatabaseError) {
+                                    }
+                                    override fun onDataChange(p0: DataSnapshot) {
+                                        val user = p0.getValue(User::class.java)
+                                        if(user != null) {
+                                            viewHolder.itemView.simpleComment_username.text = user.userName + " :"
+                                        }
+                                    }
+                                })
+                                viewHolder.itemView.simpleComment_comment.text = comment.content
+                            }
+                        }
+                    }
+                })
             }
 
             viewHolder.itemView.addFriend_button.setOnClickListener{
@@ -307,6 +375,12 @@ class BlogsFragment : Fragment() {
                     ).show()
                 }
 
+            }
+
+            viewHolder.itemView.allCommentsButton.setOnClickListener {
+                var intent = Intent(activity, AllCommentsActivity::class.java)
+                intent.putExtra("blog_id", blogId)
+                activity?.startActivity(intent)
             }
         }
 

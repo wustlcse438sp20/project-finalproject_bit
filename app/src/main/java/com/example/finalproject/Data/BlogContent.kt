@@ -10,12 +10,13 @@ class BlogContent (val uid : String?,
                    val address : String,
                    val date : String,
                    val favorite : Int,
+                   val favoriteList : ArrayList<String>,
                    val isPublic : Boolean,
                    val showDate: Boolean,
                    val showAddress: Boolean
 
 ){
-    constructor():this("","","","","","","",0,true,true,true)
+    constructor():this("","","","","","","",0, ArrayList(),true,true,true)
 }
 
 

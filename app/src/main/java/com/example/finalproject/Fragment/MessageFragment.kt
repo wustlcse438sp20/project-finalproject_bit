@@ -2,6 +2,7 @@ package com.example.finalproject.Fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finalproject.Data.ChatMessage
+import com.example.finalproject.Data.LatestMessage
 import com.example.finalproject.Data.User
 import com.example.finalproject.PrivatelyChatActivity
 import com.example.finalproject.R
@@ -53,11 +55,15 @@ class MessageFragment : Fragment() {
     fun listenForLatestMessages() {
         val adapter = GroupAdapter<GroupieViewHolder>()
         val fromId = FirebaseAuth.getInstance().uid
+        Log.d("uid", fromId)
         val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
         ref.addChildEventListener(object : ChildEventListener{
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val latestMessage = p0.getValue(ChatMessage :: class.java)
+                val latestMessage = p0.getValue(LatestMessage :: class.java)
+                Log.d("from id", latestMessage!!.fromId)
+                Log.d("to id", latestMessage!!.toId)
+                Log.d("is Read", latestMessage!!.readOrNot.toString())
                 val userId : String
                     if (fromId != latestMessage!!.fromId){
                         userId = latestMessage.fromId
@@ -104,7 +110,7 @@ class MessageFragment : Fragment() {
     }
 
 
-    inner class LatestMessageItem (val user: User, val latestMessage: ChatMessage) : Item<GroupieViewHolder>() {
+    inner class LatestMessageItem (val user: User, val latestMessage: LatestMessage) : Item<GroupieViewHolder>() {
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.latestMessage_item_name.text = user.userName
             viewHolder.itemView.latestMessage_item_text.text = latestMessage.text
@@ -115,7 +121,20 @@ class MessageFragment : Fragment() {
                 .load(url)
                 .into(user_photo)
 
+            Log.d("username", user.userName)
+            Log.d("isRead", latestMessage.readOrNot.toString())
+
+            if(!latestMessage.readOrNot) {
+                Log.d("red dot", user.userName)
+                viewHolder.itemView.red_dot.visibility = View.VISIBLE
+            }
+
             viewHolder.itemView.setOnClickListener {
+
+                viewHolder.itemView.red_dot.visibility = View.INVISIBLE
+                val myref2 = FirebaseDatabase.getInstance().getReference("/latest-messages/${latestMessage.toId}/${latestMessage.fromId}").child("readOrNot")
+                myref2.setValue(true)
+
                 var intent = Intent(activity, PrivatelyChatActivity::class.java)
                 intent.putExtra("USER_KEY", user)
                 activity?.startActivity(intent)
