@@ -175,7 +175,7 @@ class VideoFragment : Fragment() {
         val filename = UUID.randomUUID().toString()
         val description = video_describtion.text.toString()
         val blogInformation =
-            VideoContent(uid, filename, uri, description, "St.Louis", formatedDate,0, ArrayList())
+            VideoContent(uid, filename, uri, description, formatedDate,0, ArrayList())
 
         val ref = FirebaseDatabase.getInstance().getReference("/video/$filename/")
         ref.setValue(blogInformation)

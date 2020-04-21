@@ -32,6 +32,8 @@ import kotlinx.android.synthetic.main.bloglayout.*
 import kotlinx.android.synthetic.main.bloglayout.view.*
 import kotlinx.android.synthetic.main.fragment_blogs.*
 import kotlinx.android.synthetic.main.fragment_friends.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class BlogsFragment : Fragment() {
@@ -312,8 +314,9 @@ class BlogsFragment : Fragment() {
             viewHolder.itemView.comment_button.setOnClickListener{
                 val comment = viewHolder.itemView.comment.text.toString()
                 val commentUid = FirebaseAuth.getInstance().uid
-                val ref = FirebaseDatabase.getInstance().getReference("/comment/$blogId/$commentUid")
-                val commentContent = Comment(commentUid,blogId,comment)
+                val id = UUID.randomUUID().toString()
+                val ref = FirebaseDatabase.getInstance().getReference("/comment/$blogId/$id")
+                val commentContent = Comment(id,commentUid,blogId,comment)
                 ref.setValue(commentContent).addOnSuccessListener {
                     Log.d("AC","add comment success")
                     Toast.makeText(

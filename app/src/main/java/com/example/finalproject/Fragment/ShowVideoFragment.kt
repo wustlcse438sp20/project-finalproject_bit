@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.fragment_video.view.*
 import kotlinx.android.synthetic.main.videolayout.*
 import kotlinx.android.synthetic.main.videolayout.view.*
 import kotlinx.android.synthetic.main.videolayout.view.addFriend_button
-import kotlinx.android.synthetic.main.videolayout.view.address
 import kotlinx.android.synthetic.main.videolayout.view.avatar
 import kotlinx.android.synthetic.main.videolayout.view.date
 import kotlinx.android.synthetic.main.videolayout.view.favorite_button
@@ -154,7 +153,6 @@ class ShowVideoFragment : Fragment() {
             var isMyFavorite : Boolean = false
             viewHolder.itemView.video_description.text = Video.description
             viewHolder.itemView.date.text = Video.date
-            viewHolder.itemView.address.text = Video.address
             viewHolder.itemView.favorite_number.text = Video.favorite.toString()
 
             if(Video.favoriteList.contains(FirebaseAuth.getInstance().uid)) {
