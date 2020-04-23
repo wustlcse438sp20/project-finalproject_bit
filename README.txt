@@ -1,5 +1,7 @@
-App Name:
+App Name: Blog Sharing Social App
 Team Members:
+    Lingxu Zhang  476455
+    Yuxuan Ding   475510
 
 In this file you should include:
 
