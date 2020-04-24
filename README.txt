@@ -1,6 +1,7 @@
 App Name: 
     Blog Sharing Social App
 
+
 Description: 
     We made a blog social app. In this app, every user will have a separate account. Users can post blog,
 and the content can be pictures and text. After a blog post by the user, we will use the GPS function to 
@@ -14,8 +15,9 @@ with them.
     
 
 Team Members:
-    Lingxu Zhang  476455
     Yuxuan Ding   475510
+    Lingxu Zhang  476455
+
 
 In this file you should include:
 
