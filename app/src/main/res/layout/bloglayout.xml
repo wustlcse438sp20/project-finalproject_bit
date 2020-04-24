@@ -54,8 +54,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:text="TextView"
             android:textSize="35dp"
+            android:layout_marginLeft="130dp"
             android:textStyle="bold" />
 
 
@@ -74,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="TextView"
+        android:text=""
         android:textSize="20dp"
         android:textStyle="normal"
         />
@@ -117,24 +119,21 @@
             android:id="@+id/favorite_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="140dp"
-            android:layout_alignParentLeft="true"
+            android:background="#FFFFFF"
             android:visibility="visible"
             app:srcCompat="@drawable/baseline_thumb_up_white_18dp"
-            android:background="#FFFFFF"
             tools:visibility="visible" />
 
         <TextView
             android:id="@+id/favorite_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/favorite_button"
-            android:layout_marginLeft="5dp"
-            android:gravity="center_vertical"
             android:text="0"
+            android:textColor="#000000"
             android:textSize="20dp"
-            android:textColor="#000000"/>
+            />
 
         <EditText
             android:id="@+id/comment"
@@ -142,8 +141,12 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="100dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_toStartOf="@+id/comment_button"
             android:layout_toLeftOf="@+id/comment_button"
             android:hint="Input comment here"
+            android:textStyle="bold"
             android:inputType="textPersonName"
             android:text="" />
 
@@ -152,8 +155,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            app:srcCompat="@drawable/baseline_create_white_18dp"
-            android:background="#FFFFFF"/>
+            android:layout_marginRight="8dp"
+            android:background="#FFFFFF"
+            app:srcCompat="@drawable/baseline_create_white_18dp" />
 
     </RelativeLayout>
 
@@ -161,8 +165,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Comments"
-        android:textSize="15sp"
-        android:textStyle="italic" />
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -200,7 +205,6 @@
         android:text="See all comments"
         android:textSize="15dp"
         android:textColor="#4169E1"
-        android:layout_marginLeft="35dp"
-        android:gravity="top"/>
+        android:layout_marginLeft="130dp" />
 
 </LinearLayout>

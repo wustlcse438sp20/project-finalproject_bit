@@ -79,9 +79,7 @@ class AddBlogActivity : AppCompatActivity() {
 
             }
         }
-        checkBox1.setOnClickListener{
-            isPublic = false
-        }
+
         checkBox2.setOnClickListener{
             showDate = true
         }
@@ -253,15 +251,3 @@ class AddBlogActivity : AppCompatActivity() {
 
 
 }
-//addresses = geocoder.getFromLocation(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-//
-//                String locality = addresses.get(0).getLocality(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                String subLocality = addresses.get(0).getSubLocality(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                //String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                String address1 = addresses.get(0).getAddressLine(1); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                String address2 = addresses.get(0).getAddressLine(2); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                String city = addresses.get(0).getLocality();
-//                String state = addresses.get(0).getAdminArea();
-//                String country = addresses.get(0).getCountryName();
-//               // String postalCode = addresses.get(0).getPostalCode();
-//                String knownName = addresses.get(0).getFeatureName();

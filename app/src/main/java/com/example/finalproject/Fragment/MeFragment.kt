@@ -69,6 +69,11 @@ class MeFragment : Fragment(){
             intent.type = "image/*"
             startActivityForResult(intent, 0)
         }
+        Avatar_Button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
+        }
+
         Camera_Button.setOnClickListener{
             var permission = ContextCompat.checkSelfPermission(this@MeFragment.context!!, android.Manifest.permission.CAMERA)
 
@@ -96,11 +101,11 @@ class MeFragment : Fragment(){
                     }
                     startActivityForResult(takePictureIntent, IMAGE_CAPTURE_CODE)
                 }
-
-
-
-
             }
+        }
+        Camera_Button.setOnLongClickListener{
+            Toast.makeText(context,it.getContentDescription(), Toast.LENGTH_SHORT).show();
+            true
         }
         Reset_Button.setOnClickListener{
             upLoadPhotoToFirebaseStorage()
@@ -243,6 +248,7 @@ class MeFragment : Fragment(){
         val user = User(uid!!, email, Reset_username.text.toString(), profileImageUri)
         myRef.setValue(user).addOnSuccessListener {
             Log.d("Register", "Upload information to database successful")
+            Toast.makeText(context,"Reset infomation success",Toast.LENGTH_SHORT).show()
         }
 
     }
